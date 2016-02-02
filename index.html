@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<title> XTree Component</title>
+		<link rel="stylesheet" href="xtree.css" type="text/css" />
+		<script src='jquery-1.11.3.min.js'></script>
+		<script src='xtree.js'></script>
+		<script>
+			var tree;
+			function deleteTouchedNode(){
+				var node = xtree.currentTouchedNode;
+				if(node.nodeId != null){//there is a touched node
+					if(confirm("do you want to remove '"+  node.htmlTitle +"'")){
+						tree.removeCurrentNodeByNodeId(node.nodeId, function(){
+							alert('successfully delete current touched node:' + node.htmlTitle);
+						});
+					}
+				}
+			}
+			
+			function createChildNode(){
+				var node = xtree.currentTouchedNode;
+				if(node.nodeId != null){//there is a touched node
+					var nodes = new Array();
+					nodes[0] = new xtreeNode("New Node", false);
+					tree.addNodesForNode(node.nodeId,nodes);
+				}
+			}
+			
+			function updateTouchedNode(){
+				var node = xtree.currentTouchedNode;
+				if(node.nodeId != null){//there is a touched node
+					tree.updateHTMLTitleForNode(node.nodeId, "Update Node");
+				}
+			}
+
+			$(document).ready(function(){
+				tree = new xtree();
+				var request = {url:"http://www.google.com",method:"GET",data:null,header:null};
+				tree.loadNodes(request,function(data,success){
+					var nodes = new Array();
+					nodes[0] = new xtreeNode("Sports", false);
+					nodes[1] = new xtreeNode("Food", true);
+					nodes[2] = new xtreeNode("Travel", false);
+					tree.addNodesForNode(null,nodes);
+				});
+				
+				
+			   	tree.didClickedNode = function(node,expanding){
+					if(expanding){
+						tree.changeNodeIconState(node, XTREE_NODE_STATE.BUSY);
+						if(!tree.isChildNodesExisted(node.nodeId)){
+							var nodes = new Array();
+							nodes[0] = new xtreeNode("Node1", false);
+							nodes[1] = new xtreeNode("Node2", true);
+							nodes[2] = new xtreeNode("Node3", false);
+							tree.addNodesForNode(node.nodeId,nodes);
+						}else{
+							tree.showChildNodesFromParentNode(node.nodeId);
+						}
+						tree.changeNodeIconState(node, XTREE_NODE_STATE.EXPANDED);
+					}
+					else{
+						//hide and remove require new data to populate
+						tree.hideAndRemoveChildNodesFromParentNode(node.nodeId);
+						
+						//hide only hide the nodes, will directly keep the previous state. 
+						//tree.hideChildNodesFromParentNode(node.nodeId);
+					}
+				};
+				
+			   	tree.didSelectedNode = function(node, checked){
+					if(checked){
+						tree.setAllChildNodesState(node.nodeId, checked);
+						tree.captureSelectedState();
+						var selectedNode = tree.cachedSelectedNodes
+						alert("Count:" + selectedNode.length);
+					}
+					else{
+						tree.setAllChildNodesState(node.nodeId, checked);
+					}
+				};
+			});
+		</script>
+	</head>
+	<body>
+		<div style='float:left;width:100%;'>
+			<button class="btn btn-default" style="float:left;margin:0px;margin-top:8px;margin-right:10px;margin-right:5px;padding-top:2px;padding-left:3px;padding-right:3px;height:22px;font-size:10px;" onclick="updateTouchedNode()">
+				<span class="glyphicon glyphicon-edit"  style="margin-right:2px;"></span>Category Info
+			</button>
+			
+			<button class="btn btn-default" style="float:left;margin:0px;margin-top:8px;margin-right:10px;padding-top:2px;padding-left:3px;padding-right:3px;height:22px;font-size:10px;" onclick="deleteTouchedNode()">
+				<span class="glyphicon glyphicon-minus"  style="margin-right:2px;"></span>Delete Category
+			</button>
+			
+			<button class="btn btn-default" style="float:left;margin:0px;margin-top:8px;margin-right:10px;padding-top:2px;padding-left:3px;padding-right:3px;height:22px;font-size:10px;" onclick="createChildNode()">
+				<span class="glyphicon glyphicon-plus"  style="margin-right:2px;"></span>Create Category
+			</button>
+		</div>
+		<div style="width:100%;float:left;" class="xtree"></div>
+
+	</body>
+</html>

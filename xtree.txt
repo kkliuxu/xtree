@@ -1,0 +1,99 @@
+/* Copyright reserved by Xu Liu and it is free to use
+ * Author: Xu Liu
+ * Email: kkliuxu@gmail.com
+ * Location: Toronto, Canada
+ */ 
+   xtree method:
+   1) initialize the xtreeNode. there are two ways. new xtreeNode("node title", selected or not, <unique id>)
+      1.1) without node id -> new xtreeNode("Sports", false);
+      1.2) with node id -> new xtreeNode("Sports", false, "uniqueId"); 
+   2) load data and add nodes:
+	var request = {url:"http://www.google.com",method:"GET",data:null,header:null};
+	tree.loadNodes(request,function(data,success){
+		var nodes = new Array();
+		nodes[0] = new xtreeNode("Sports", false);
+		nodes[1] = new xtreeNode("Food", true);
+		nodes[2] = new xtreeNode("Travel", false);
+		tree.addNodesForNode(null,nodes);
+	});
+   3) listen the node click event, it is different from selected. this just show the node is clicked
+   	tree.didClickedNode = function(node,expanded){
+		if(expanded){alert('expanded' + node.htmlTitle);}
+		else{alert('collapsed' + node.htmlTitle);}
+	};
+   4) listen the node is selected or not, it is different from click.
+   	tree.didSelectedNode = function(node, checked){
+		if(checked){alert('checked' + node.htmlTitle);}
+		else{alert('no-checked' + node.htmlTitle);}
+	};
+   5) get all selected xtreeNode
+    for(var index in tree.cachedSelectedNodes){
+    		alert(tree.cachedSelectedNodes[index]);
+    }
+   6) if a node is loading the, we can change the icon state. there are 3 states for the node (EXPANDED,COLLAPSED,BUSY,LEAF)
+      when loading data and try to prepare the nodes, we can call BUSY. and after the data come back, then call EXPANDED or COLLAPSED to restore the state
+      LEAF is the last node of the tree.
+   	tree.didClickedNode = function(node,expanding){
+		if(expanding){
+			alert('expanding' + node.htmlTitle);
+			tree.changeNodeIconState(node, XTREE_NODE_STATE.BUSY);
+		}
+		else{alert('collapsing' + node.htmlTitle);}
+	};
+	7) hide and show children nodes from parent nodes
+	tree.hideChildNodesFromParentNode(parentNodeId);
+	tree.showChildNodesFromParentNode(parentNodeId);
+	8) hide and remove children nodes from parent nodes, 
+	   so that we can update the children nodes by calling tree.addNodesForNode to refresh
+	   this method will update the cachedSelectedNodes storage while the hide and show won't update the cachedSelectedNodes
+	tree.hideAndRemoveChildNodesFromParentNode(parentNodeId);
+	9) check a parent node has child nodes or not
+	tree.isChildNodesExisted(parentNodeId);
+	10) delete a current node
+	function deleteTouchedNode(){
+		var node = xtree.currentTouchedNode;
+		if(node.nodeId != null){//there is a touched node
+			if(confirm("do you want to remove '"+  node.htmlTitle +"'")){
+				tree.removeCurrentNodeByNodeId(node.nodeId, function(){
+					alert('successfully delete current touched node:' + node.htmlTitle);
+				});
+			}
+		}
+	}
+	11) update a current node htmlTitle
+	function updateTouchedNode(){
+		var node = xtree.currentTouchedNode;
+		if(node.nodeId != null){//there is a touched node
+			tree.updateHTMLTitleForNode(node.nodeId, "Update Node");
+		}
+	}
+	12) add a node as a child to a current node
+	function createChildNode(){
+		var node = xtree.currentTouchedNode;
+		if(node.nodeId != null){//there is a touched node
+			var nodes = new Array();
+			nodes[0] = new xtreeNode("New Node", false);
+			tree.addNodesForNode(node.nodeId,nodes);
+		}
+	}
+	13) get all selected node
+		13.1) first call the function to fetch: tree.captureSelectedState();
+		13.2) then use it in the array (return xtreeNode array): var selectedNode = tree.cachedSelectedNodes
+	14) select all direct parents based on a current id
+		tree.didSelectedNode = function(node, checked){
+			if(checked){
+				tree.setAllParentNodesState(node.nodeId, checked);
+			}
+			else{
+				tree.setAllParentNodesState(node.nodeId, checked);
+			}
+		};
+	15) select all direct child based on a current id
+		tree.didSelectedNode = function(node, checked){
+			if(checked){
+				tree.setAllChildNodesState(node.nodeId, checked);
+			}
+			else{
+				tree.setAllChildNodesState(node.nodeId, checked);
+			}
+		};

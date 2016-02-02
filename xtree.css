@@ -1,0 +1,10 @@
+body{font-size:12px;font-family: Helvetica, sans-serif;}
+.xtree_root{list-style:none;padding:10px;}
+.xtree_child{list-style:none;padding-left:20px;}
+.xtree ul li{line-height:20px;height:auto;}
+.xtree_bold{font-weight:bold;}
+.xtree_symbol {margin-left:2px;width:16px;height:13px;display:inline-block;vertical-align:middle;}
+.xtree_collapsed{background:url(images/collapsed.gif) no-repeat 0 0;width:16px;height:13px;}
+.xtree_expanded{background:url(images/expanded.gif) no-repeat 0 0;width:16px;height:13px;}
+.xtree_leaf{background:url("") no-repeat 0 0;width:0px;height:0px;}
+.xtree_throbber{background:url(images/throbber.gif) no-repeat 0 0;width:16px;height:13px;}
