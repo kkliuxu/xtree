@@ -113,4 +113,6 @@ XTree Build Method for Developer to use:
 				<code>tree.setAllChildNodesState(node.nodeId, checked);</code><br/>
 			<code>}</code><br/>
 		<code>};</code><br/>
+		<strong>16) set all checkbox visible or invisible</strong><br/>
+	<code>tree.setVisibleForAllCheckbox(false);</code>
 	
