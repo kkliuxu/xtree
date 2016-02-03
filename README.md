@@ -4,10 +4,10 @@ XTree is an easy to use component for web developer to manage the directory tree
 
 Download the zip file and include xtree.js and xtree.css, then everything should work. no extra library is required.
 
-<strong>Example 1:</strong> Select all child nodes, create and delete.
+<strong>Example 1:</strong> Select all child nodes, create and delete.<br/>
 <img src='http://www.xuliu.info/xtree/xtree.gif' />
 
-<strong>Example 2:</strong> Select all parent nodes, create, delete and update.
+<strong>Example 2:</strong> Select all parent nodes, create, delete and update.<br/>
 <img src='http://www.xuliu.info/xtree/xtree_p.gif' />
 
 XTree Build Method for Developer to use:
