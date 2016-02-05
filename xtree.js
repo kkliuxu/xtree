@@ -204,8 +204,10 @@ var xtree = function(){
 		for(var i in nodes){
 			var node = nodes[i];
 			var jsonNodeData = "";
+			
 			if(node.nodeData != null){
 				jsonNodeData = JSON.stringify(node.nodeData);
+				jsonNodeData = jsonNodeData.replace(/'/g, "");
 			}
 			nodesHTML += "<li id='li_"+node.nodeId+"'><input id='ck_"+ node.nodeId +"' type='checkbox' "+ (xtree.enableCheckBox?"":"class='xtree_hidecheckbox'") +" onchange=\"$('body').data('"+this.id+"').chosenNode(this)\" "+ (node.selected?"checked":"") +"/><span id='sp_"+ node.nodeId +"' class=\"xtree_symbol xtree_collapsed\" onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\"></span><span id='lbl_"+ node.nodeId  
 			+"' onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\" style='cursor:pointer;'>" + node.htmlTitle +"</span><input type='hidden' id='jva_"+node.nodeId+"' value='" + jsonNodeData + "' />";
@@ -500,6 +502,11 @@ var xtree = function(){
 			return nodeData;
 		}
 		return null;
+	}
+	
+	//filter single or double quote
+	this.safeText = function(string){
+		return string.replace(/"/g, "'");
 	}
 	
 	
