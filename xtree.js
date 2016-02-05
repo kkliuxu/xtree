@@ -99,6 +99,8 @@
 		};
 	16) set all checkbox visible or invisible
 	tree.setVisibleForAllCheckbox(false);
+	17) get node data from node id, if user pre set up the nodeData
+	tree.getNodeDataObjectByNodeId(nodeId);
 */
 
 //xtree request object
@@ -119,7 +121,7 @@ var xtreeNode = function(htmlTitle, selected, nodeId, nodeData){
 		this.nodeId = nodeId;
 	}
 	
-		//dynamic data to save different strucutre of node
+	//dynamic data to save different strucutre of node
 	if(nodeData === undefined){
 		this.nodeData = null;
 	}else{
@@ -197,7 +199,14 @@ var xtree = function(){
 		
 		for(var i in nodes){
 			var node = nodes[i];
-			nodesHTML += "<li id='li_"+node.nodeId+"'><input id='ck_"+ node.nodeId +"' type='checkbox' "+ (xtree.enableCheckBox?"":"class='xtree_hidecheckbox'") +" onchange=\"$('body').data('"+this.id+"').chosenNode(this)\" "+ (node.selected?"checked":"") +"/><span id='sp_"+ node.nodeId +"' class=\"xtree_symbol xtree_collapsed\" onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\"></span><span id='lbl_"+ node.nodeId  +"' onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\" style='cursor:pointer;'>" + node.htmlTitle +"</span>";
+			var jsonNodeData = "";
+			if(node.nodeData != null){
+				jsonNodeData = JSON.stringify(node.nodeData);
+				jsonNodeData.replace(new RegExp('"', 'g'), '-');
+				jsonNodeData.replace(new RegExp("'", 'g'), '-');
+			}
+			nodesHTML += "<li id='li_"+node.nodeId+"'><input id='ck_"+ node.nodeId +"' type='checkbox' "+ (xtree.enableCheckBox?"":"class='xtree_hidecheckbox'") +" onchange=\"$('body').data('"+this.id+"').chosenNode(this)\" "+ (node.selected?"checked":"") +"/><span id='sp_"+ node.nodeId +"' class=\"xtree_symbol xtree_collapsed\" onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\"></span><span id='lbl_"+ node.nodeId  
+			+"' onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\" style='cursor:pointer;'>" + node.htmlTitle +"</span><input type='hidden' id='jva_"+node.nodeId+"' value='" + jsonNodeData + "' />";
 		}
 		if(!parentPanelExisted){
 			nodesHTML += "</ul>";
@@ -450,6 +459,16 @@ var xtree = function(){
 			$(".xtree").find("input:checkbox[id^=ck_]").addClass("xtree_hidecheckbox");
 			xtree.enableCheckBox = true;
 		}
+	}
+	
+	//get node data based on node id. if the node data is set up before.
+	this.getNodeDataObjectByNodeId = function(nodeId){
+		var nodeJson = $("#jva_" + nodeId).val();
+		if(nodeJson.length > 0){
+			var nodeData = JSON.parse(nodeJson);
+			return nodeData;
+		}
+		return null;
 	}
 	
 	
