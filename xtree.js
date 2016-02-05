@@ -101,6 +101,10 @@
 	tree.setVisibleForAllCheckbox(false);
 	17) get node data from node id, if user pre set up the nodeData
 	tree.getNodeDataObjectByNodeId(nodeId);
+	18) get node icon state, the state includes EXPANED, LEAF and others which is given in the changeNodeIcon function
+	tree.getNodeIconState(nodeId);
+	19) set up and update the nodeData for a given nodeId
+	tree.updateNodeDataForNode(nodeId,{id:"nodeId",type:"any datatype"});
 */
 
 //xtree request object
@@ -202,8 +206,6 @@ var xtree = function(){
 			var jsonNodeData = "";
 			if(node.nodeData != null){
 				jsonNodeData = JSON.stringify(node.nodeData);
-				jsonNodeData.replace(new RegExp('"', 'g'), '-');
-				jsonNodeData.replace(new RegExp("'", 'g'), '-');
 			}
 			nodesHTML += "<li id='li_"+node.nodeId+"'><input id='ck_"+ node.nodeId +"' type='checkbox' "+ (xtree.enableCheckBox?"":"class='xtree_hidecheckbox'") +" onchange=\"$('body').data('"+this.id+"').chosenNode(this)\" "+ (node.selected?"checked":"") +"/><span id='sp_"+ node.nodeId +"' class=\"xtree_symbol xtree_collapsed\" onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\"></span><span id='lbl_"+ node.nodeId  
 			+"' onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\" style='cursor:pointer;'>" + node.htmlTitle +"</span><input type='hidden' id='jva_"+node.nodeId+"' value='" + jsonNodeData + "' />";
@@ -324,6 +326,27 @@ var xtree = function(){
 		}
 	}
 	
+	
+	//get node current icon state
+	this.getNodeIconState = function(nodeId){
+		if($("#sp_" + nodeId).removeClass("xtree_collapsed")){
+			return XTREE_NODE_STATE.COLLAPSED;
+		}
+		if($("#sp_" + nodeId).removeClass("xtree_expanded")){
+			return XTREE_NODE_STATE.EXPANDED;
+		}
+		if($("#sp_" + nodeId).removeClass("xtree_throbber")){
+			return XTREE_NODE_STATE.BUSY;
+		}
+		if($("#sp_" + nodeId).removeClass("xtree_leaf")){
+			return XTREE_NODE_STATE.LEAF;
+		}
+		return XTREE_NODE_STATE.EXPANDED;
+	}
+	
+	
+	
+	
 	//hide a group of subitems
 	//operation for a group of child nodes
 	this.hideChildNodesFromParentNode = function(parentNodeId){
@@ -398,6 +421,14 @@ var xtree = function(){
 	this.updateHTMLTitleForNode = function(nodeId, htmlTitle){
 		if($("#lbl_" + nodeId).length > 0){
 			$("#lbl_" + nodeId).html(htmlTitle);
+		}
+	}
+	this.updateNodeDataForNode = function(nodeId, nodeData){
+		if($("#jva_" + nodeId).length > 0){
+			if(nodeData != null){
+				var jsonVal = JSON.stringify(nodeData);
+				$("#jva_" + nodeId).val(jsonVal);
+			}
 		}
 	}
 	
