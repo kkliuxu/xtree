@@ -97,6 +97,8 @@
 				tree.setAllChildNodesState(node.nodeId, checked);
 			}
 		};
+	16) set all checkbox visible or invisible
+	tree.setVisibleForAllCheckbox(false);
 */
 
 //xtree request object
@@ -109,13 +111,21 @@ var xtreeRequest = function(url, method, data, header){
 };
 
 //xtree node object
-var xtreeNode = function(htmlTitle, selected, nodeId){
+var xtreeNode = function(htmlTitle, selected, nodeId, nodeData){
 	xtree.elementCount++;
 	if(nodeId === undefined){
 		this.nodeId = "node" + new Date().getTime() + xtree.elementCount;
 	}else{
 		this.nodeId = nodeId;
 	}
+	
+		//dynamic data to save different strucutre of node
+	if(nodeData === undefined){
+		this.nodeData = null;
+	}else{
+		this.nodeData = nodeData;
+	}
+	
 	this.htmlTitle = htmlTitle;
 	this.selected = selected;
 	
@@ -140,6 +150,8 @@ var xtree = function(){
 	xtree.elementCount = 0;
 	//previous touched node
 	xtree.currentTouchedNode = null;
+	//enable checkbox
+	xtree.enableCheckBox = false;
 	
 	//those are call back function as below
 	this.didClickedNode = null;
@@ -185,7 +197,7 @@ var xtree = function(){
 		
 		for(var i in nodes){
 			var node = nodes[i];
-			nodesHTML += "<li id='li_"+node.nodeId+"'><input id='ck_"+ node.nodeId +"' type='checkbox' onchange=\"$('body').data('"+this.id+"').chosenNode(this)\" "+ (node.selected?"checked":"") +"/><span id='sp_"+ node.nodeId +"' class=\"xtree_symbol xtree_collapsed\" onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\"></span><span id='lbl_"+ node.nodeId  +"' onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\" style='cursor:pointer;'>" + node.htmlTitle +"</span>";
+			nodesHTML += "<li id='li_"+node.nodeId+"'><input id='ck_"+ node.nodeId +"' type='checkbox' "+ (xtree.enableCheckBox?"":"class='xtree_hidecheckbox'") +" onchange=\"$('body').data('"+this.id+"').chosenNode(this)\" "+ (node.selected?"checked":"") +"/><span id='sp_"+ node.nodeId +"' class=\"xtree_symbol xtree_collapsed\" onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\"></span><span id='lbl_"+ node.nodeId  +"' onclick=\"$('body').data('"+ this.id +"').touchedNode(this)\" style='cursor:pointer;'>" + node.htmlTitle +"</span>";
 		}
 		if(!parentPanelExisted){
 			nodesHTML += "</ul>";
@@ -427,6 +439,18 @@ var xtree = function(){
 			}
 		}//.length > 0
 	}//set all child nodes state
+	
+	//set all the checkbox display state
+	this.setVisibleForAllCheckbox = function(visible){
+		if(!visible){
+			$(".xtree").find("input:checkbox[id^=ck_]").removeClass("xtree_hidecheckbox");
+			xtree.enableCheckBox = false;
+		}else{
+			$(".xtree").find("input:checkbox[id^=ck_]").removeClass("xtree_hidecheckbox");
+			$(".xtree").find("input:checkbox[id^=ck_]").addClass("xtree_hidecheckbox");
+			xtree.enableCheckBox = true;
+		}
+	}
 	
 	
 	//check a parent node has child nodes or not

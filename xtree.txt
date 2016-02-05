@@ -97,3 +97,5 @@
 				tree.setAllChildNodesState(node.nodeId, checked);
 			}
 		};
+	16) set all checkbox visible or invisible
+	tree.setVisibleForAllCheckbox(false);

@@ -79,6 +79,9 @@
 						tree.setAllChildNodesState(node.nodeId, checked);
 					}
 				};
+				
+				var fullNode = new xtreeNode("node 1", false, "node id", {nid:"nodeid",ndesc:"any datatype"});
+				document.title = fullNode.nodeData.ndesc;
 			});
 		</script>
 	</head>

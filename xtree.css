@@ -8,3 +8,4 @@ body{font-size:12px;font-family: Helvetica, sans-serif;}
 .xtree_expanded{background:url(images/expanded.gif) no-repeat 0 0;width:16px;height:13px;}
 .xtree_leaf{background:url("") no-repeat 0 0;width:0px;height:0px;}
 .xtree_throbber{background:url(images/throbber.gif) no-repeat 0 0;width:16px;height:13px;}
+.xtree_hidecheckbox{display:none;}
